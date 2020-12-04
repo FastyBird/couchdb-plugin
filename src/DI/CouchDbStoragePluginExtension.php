@@ -40,21 +40,11 @@ class CouchDbStoragePluginExtension extends DI\CompilerExtension
 	{
 		return Schema\Expect::structure([
 			'connection' => Schema\Expect::structure([
+				'database' => Schema\Expect::string()->default('state_storage'),
 				'host'     => Schema\Expect::string()->default('127.0.0.1'),
 				'port'     => Schema\Expect::int(5672),
 				'username' => Schema\Expect::string('guest'),
 				'password' => Schema\Expect::string('guest'),
-			]),
-
-			'origin'   => Schema\Expect::string()->required(),
-			'rabbitMQ' => Schema\Expect::structure([
-
-				'queue'      => Schema\Expect::structure([
-					'name' => Schema\Expect::string()->required(),
-				]),
-				'routing'    => Schema\Expect::structure([
-					'keys' => Schema\Expect::array([])->items(Schema\Expect::string()),
-				]),
 			]),
 		]);
 	}
