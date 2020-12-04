@@ -18,7 +18,6 @@ namespace FastyBird\CouchDbStoragePlugin\States;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Nette;
-use PHPOnCouch;
 
 /**
  * Property state

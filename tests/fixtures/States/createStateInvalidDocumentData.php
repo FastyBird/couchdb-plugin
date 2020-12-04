@@ -1,7 +1,6 @@
 <?php declare(strict_types = 1);
 
 use FastyBird\CouchDbStoragePlugin\States;
-use Ramsey\Uuid\Uuid;
 
 return [
 	'one'   => [
