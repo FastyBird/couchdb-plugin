@@ -43,8 +43,8 @@ class CouchDbStoragePluginExtension extends DI\CompilerExtension
 				'database' => Schema\Expect::string()->default('state_storage'),
 				'host'     => Schema\Expect::string()->default('127.0.0.1'),
 				'port'     => Schema\Expect::int(5672),
-				'username' => Schema\Expect::string('guest'),
-				'password' => Schema\Expect::string('guest'),
+				'username' => Schema\Expect::string('guest')->nullable(),
+				'password' => Schema\Expect::string('guest')->nullable(),
 			]),
 		]);
 	}
