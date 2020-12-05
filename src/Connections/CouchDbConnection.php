@@ -142,7 +142,7 @@ final class CouchDbConnection implements ICouchDbConnection
 				],
 			]);
 
-			throw new Exceptions\TerminateException('Connection could not be established', 0, $ex);
+			throw new Exceptions\InvalidStateException('Connection could not be established', 0, $ex);
 		}
 	}
 
