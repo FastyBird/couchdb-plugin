@@ -29,28 +29,28 @@ interface IProperty extends IState
 {
 
 	/**
-	 * @param float|int|string|null $value
+	 * @param string|null $value
 	 *
 	 * @return void
 	 */
-	public function setValue($value): void;
+	public function setValue(?string $value): void;
 
 	/**
-	 * @return float|int|bool|string|null
+	 * @return string|null
 	 */
-	public function getValue();
+	public function getValue(): ?string;
 
 	/**
-	 * @param float|int|string|null $expected
+	 * @param string|null $expected
 	 *
 	 * @return void
 	 */
-	public function setExpected($expected): void;
+	public function setExpected(?string $expected): void;
 
 	/**
-	 * @return float|int|bool|string|null
+	 * @return string|null
 	 */
-	public function getExpected();
+	public function getExpected(): ?string;
 
 	/**
 	 * @param bool $pending

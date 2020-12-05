@@ -50,15 +50,15 @@ class Property extends State implements IProperty
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setValue($value): void
+	public function setValue(?string $value): void
 	{
-		$this->value = $value !== null ? (string) $value : null;
+		$this->value = $value;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getValue()
+	public function getValue(): ?string
 	{
 		return $this->value;
 	}
@@ -66,15 +66,15 @@ class Property extends State implements IProperty
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setExpected($expected): void
+	public function setExpected(?string $expected): void
 	{
-		$this->expected = $expected !== null ? (string) $expected : null;
+		$this->expected = $expected;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getExpected()
+	public function getExpected(): ?string
 	{
 		return $this->expected;
 	}
