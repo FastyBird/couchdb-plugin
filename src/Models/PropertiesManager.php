@@ -191,7 +191,7 @@ class PropertiesManager implements IPropertiesManager
 
 		$this->onAfterUpdate($updatedState, $state);
 
-		return $state;
+		return $updatedState;
 	}
 
 	/**
