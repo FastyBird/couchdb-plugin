@@ -22,7 +22,7 @@ $ composer require fastybird/couchdb-storage-plugin
 
 ## Documentation
 
-Learn how to consume & publish messages in [documentation](https://github.com/FastyBird/couchdb-storage-plugin/blob/master/docs/en/index.md).
+Learn how to read & write states in [documentation](https://github.com/FastyBird/couchdb-storage-plugin/blob/master/docs/en/index.md).
 
 ***
 Homepage [https://www.fastybird.com](https://www.fastybird.com) and repository [https://github.com/FastyBird/couchdb-storage-plugin](https://github.com/FastyBird/couchdb-storage-plugin).
