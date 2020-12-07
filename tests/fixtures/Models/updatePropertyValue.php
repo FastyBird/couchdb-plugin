@@ -2,7 +2,8 @@
 
 use Ramsey\Uuid;
 
-$id = Uuid\Uuid::uuid4()->toString();
+$id = Uuid\Uuid::uuid4()
+	->toString();
 
 return [
 	'one'   => [

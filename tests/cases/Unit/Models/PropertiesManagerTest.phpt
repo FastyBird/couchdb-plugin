@@ -172,7 +172,8 @@ final class PropertiesManagerTest extends BaseMockeryTestCase
 	public function testDeleteEntity(): void
 	{
 		$originalData = [
-			'id'       => Uuid\Uuid::uuid4()->toString(),
+			'id'       => Uuid\Uuid::uuid4()
+				->toString(),
 			'device'   => 'device_name',
 			'property' => 'property_name',
 		];

@@ -4,7 +4,7 @@
  * PropertiesManager.php
  *
  * @license        More in license.md
- * @copyright      https://fastybird.com
+ * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        FastyBird:CouchDbStoragePlugin!
  * @subpackage     Models
@@ -57,18 +57,14 @@ class PropertiesManager implements IPropertiesManager
 
 	/** @var Closure[] */
 	public $onAfterDelete = [];
-
-	/** @var int[] */
-	private $retries = [];
-
-	/** @var Connections\ICouchDbConnection */
-	private $dbClient;
-
-	/** @var DateTimeFactory\DateTimeFactory */
-	private $dateFactory;
-
 	/** @var Log\LoggerInterface */
 	protected $logger;
+	/** @var int[] */
+	private $retries = [];
+	/** @var Connections\ICouchDbConnection */
+	private $dbClient;
+	/** @var DateTimeFactory\DateTimeFactory */
+	private $dateFactory;
 
 	public function __construct(
 		Connections\ICouchDbConnection $dbClient,
@@ -114,101 +110,6 @@ class PropertiesManager implements IPropertiesManager
 		$this->onAfterCreate($state);
 
 		return $state;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function update(
-		States\IProperty $state,
-		Utils\ArrayHash $values
-	): States\IProperty {
-		try {
-			$doc = $this->updateDoc($state, $values, $this->getUpdateFields());
-
-			/** @var States\IProperty $updatedState */
-			$updatedState = States\StateFactory::create(States\Property::class, $doc);
-
-		} catch (Exceptions\NotUpdatedException $ex) {
-			return $state;
-
-		} catch (Throwable $ex) {
-			$this->logger->error('[FB:PLUGIN:COUCHDB] Document could not be updated', [
-				'exception' => [
-					'message' => $ex->getMessage(),
-					'code'    => $ex->getCode(),
-				],
-				'data'      => [
-					'property' => $state->getId()->toString(),
-				],
-			]);
-
-			throw new Exceptions\InvalidStateException('Property could not be updated', $ex->getCode(), $ex);
-		}
-
-		$this->onAfterUpdate($updatedState, $state);
-
-		return $updatedState;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function updateState(
-		States\IProperty $state,
-		Utils\ArrayHash $values
-	): States\IProperty {
-		try {
-			$doc = $this->updateDoc(
-				$state,
-				$values,
-				[
-					'value',
-					'expected',
-					'pending',
-				]
-			);
-
-			/** @var States\IProperty $updatedState */
-			$updatedState = States\StateFactory::create(States\Property::class, $doc);
-
-		} catch (Exceptions\NotUpdatedException $ex) {
-			return $state;
-
-		} catch (Throwable $ex) {
-			$this->logger->error('[FB:PLUGIN:COUCHDB] Document could not be updated', [
-				'exception' => [
-					'message' => $ex->getMessage(),
-					'code'    => $ex->getCode(),
-				],
-				'data'      => [
-					'property' => $state->getId()->toString(),
-				],
-			]);
-
-			throw new Exceptions\InvalidStateException('Property could not be updated', $ex->getCode(), $ex);
-		}
-
-		$this->onAfterUpdate($updatedState, $state);
-
-		return $updatedState;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function delete(
-		States\IProperty $state
-	): bool {
-		$result = $this->deleteDoc($state->getId()->toString());
-
-		if ($result === false) {
-			return false;
-		}
-
-		$this->onAfterDelete($state);
-
-		return true;
 	}
 
 	/**
@@ -267,17 +168,21 @@ class PropertiesManager implements IPropertiesManager
 			$data->expected = null;
 			$data->pending = false;
 
-			$data->created = $this->dateFactory->getNow()->format(DATE_ATOM);
+			$data->created = $this->dateFactory->getNow()
+				->format(DATE_ATOM);
 			$data->updated = null;
 
 			$data->_id = $data->id;
 
-			$this->dbClient->getClient()->storeDoc($data);
+			$this->dbClient->getClient()
+				->storeDoc($data);
 
-			$this->dbClient->getClient()->asCouchDocuments();
+			$this->dbClient->getClient()
+				->asCouchDocuments();
 
 			/** @var PHPOnCouch\CouchDocument $doc */
-			$doc = $this->dbClient->getClient()->getDoc($data->id);
+			$doc = $this->dbClient->getClient()
+				->getDoc($data->id);
 
 			return $doc;
 
@@ -292,6 +197,55 @@ class PropertiesManager implements IPropertiesManager
 
 			throw new Exceptions\InvalidStateException('Property document could not be created', $ex->getCode(), $ex);
 		}
+	}
+
+	/**
+	 * @return mixed[]
+	 */
+	protected function getCreateFields(): array
+	{
+		return [
+			0          => 'id',
+			'value'    => null,
+			'expected' => null,
+			'pending'  => false,
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function update(
+		States\IProperty $state,
+		Utils\ArrayHash $values
+	): States\IProperty {
+		try {
+			$doc = $this->updateDoc($state, $values, $this->getUpdateFields());
+
+			/** @var States\IProperty $updatedState */
+			$updatedState = States\StateFactory::create(States\Property::class, $doc);
+
+		} catch (Exceptions\NotUpdatedException $ex) {
+			return $state;
+
+		} catch (Throwable $ex) {
+			$this->logger->error('[FB:PLUGIN:COUCHDB] Document could not be updated', [
+				'exception' => [
+					'message' => $ex->getMessage(),
+					'code'    => $ex->getCode(),
+				],
+				'data'      => [
+					'property' => $state->getId()
+						->toString(),
+				],
+			]);
+
+			throw new Exceptions\InvalidStateException('Property could not be updated', $ex->getCode(), $ex);
+		}
+
+		$this->onAfterUpdate($updatedState, $state);
+
+		return $updatedState;
 	}
 
 	/**
@@ -343,7 +297,8 @@ class PropertiesManager implements IPropertiesManager
 				throw new Exceptions\NotUpdatedException('State is not updated');
 			}
 
-			$doc->set('updated', $this->dateFactory->getNow()->format(DATE_ATOM));
+			$doc->set('updated', $this->dateFactory->getNow()
+				->format(DATE_ATOM));
 
 			// Commit changes into database
 			$doc->record();
@@ -397,6 +352,80 @@ class PropertiesManager implements IPropertiesManager
 	}
 
 	/**
+	 * @return string[]
+	 */
+	protected function getUpdateFields(): array
+	{
+		return [
+			'value',
+			'expected',
+			'pending',
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function updateState(
+		States\IProperty $state,
+		Utils\ArrayHash $values
+	): States\IProperty {
+		try {
+			$doc = $this->updateDoc(
+				$state,
+				$values,
+				[
+					'value',
+					'expected',
+					'pending',
+				]
+			);
+
+			/** @var States\IProperty $updatedState */
+			$updatedState = States\StateFactory::create(States\Property::class, $doc);
+
+		} catch (Exceptions\NotUpdatedException $ex) {
+			return $state;
+
+		} catch (Throwable $ex) {
+			$this->logger->error('[FB:PLUGIN:COUCHDB] Document could not be updated', [
+				'exception' => [
+					'message' => $ex->getMessage(),
+					'code'    => $ex->getCode(),
+				],
+				'data'      => [
+					'property' => $state->getId()
+						->toString(),
+				],
+			]);
+
+			throw new Exceptions\InvalidStateException('Property could not be updated', $ex->getCode(), $ex);
+		}
+
+		$this->onAfterUpdate($updatedState, $state);
+
+		return $updatedState;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function delete(
+		States\IProperty $state
+	): bool {
+		$result = $this->deleteDoc($state->getId()
+			->toString());
+
+		if ($result === false) {
+			return false;
+		}
+
+		$this->onAfterDelete($state);
+
+		return true;
+	}
+
+	/**
 	 * @param string $id
 	 *
 	 * @return bool
@@ -412,7 +441,8 @@ class PropertiesManager implements IPropertiesManager
 				return true;
 			}
 
-			$this->dbClient->getClient()->deleteDoc($doc);
+			$this->dbClient->getClient()
+				->deleteDoc($doc);
 
 			return true;
 
@@ -440,10 +470,12 @@ class PropertiesManager implements IPropertiesManager
 		string $id
 	): ?PHPOnCouch\CouchDocument {
 		try {
-			$this->dbClient->getClient()->asCouchDocuments();
+			$this->dbClient->getClient()
+				->asCouchDocuments();
 
 			/** @var PHPOnCouch\CouchDocument $doc */
-			$doc = $this->dbClient->getClient()->getDoc($id);
+			$doc = $this->dbClient->getClient()
+				->getDoc($id);
 
 			return $doc;
 
@@ -463,31 +495,6 @@ class PropertiesManager implements IPropertiesManager
 
 			throw new Exceptions\InvalidStateException('Document could not found.');
 		}
-	}
-
-	/**
-	 * @return mixed[]
-	 */
-	protected function getCreateFields(): array
-	{
-		return [
-			0          => 'id',
-			'value'    => null,
-			'expected' => null,
-			'pending'  => false,
-		];
-	}
-
-	/**
-	 * @return string[]
-	 */
-	protected function getUpdateFields(): array
-	{
-		return [
-			'value',
-			'expected',
-			'pending',
-		];
 	}
 
 }

@@ -7,13 +7,15 @@ return [
 	'one' => [
 		States\Property::class,
 		[
-			'id' => Uuid::uuid4()->toString(),
+			'id' => Uuid::uuid4()
+				->toString(),
 		],
 	],
 	'two' => [
 		States\Property::class,
 		[
-			'id' => Uuid::uuid4()->toString(),
+			'id' => Uuid::uuid4()
+				->toString(),
 		],
 	],
 ];

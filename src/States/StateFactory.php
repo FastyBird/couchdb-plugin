@@ -4,7 +4,7 @@
  * StateFactory.php
  *
  * @license        More in license.md
- * @copyright      https://fastybird.com
+ * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        FastyBird:CouchDbStoragePlugin!
  * @subpackage     States
@@ -116,54 +116,6 @@ final class StateFactory
 	}
 
 	/**
-	 * @param Reflector $rc
-	 *
-	 * @return ReflectionProperty[]
-	 */
-	private static function getProperties(Reflector $rc): array
-	{
-		if (!$rc instanceof ReflectionClass) {
-			return [];
-		}
-
-		$properties = [];
-
-		foreach ($rc->getProperties() as $rcProperty) {
-			$properties[] = $rcProperty;
-		}
-
-		if ($rc->getParentClass() !== false) {
-			$properties = array_merge($properties, self::getProperties($rc->getParentClass()));
-		}
-
-		return $properties;
-	}
-
-	/**
-	 * @param ReflectionProperty $rp
-	 * @param string $name
-	 *
-	 * @return string|NULL
-	 */
-	private static function parseAnnotation(ReflectionProperty $rp, string $name): ?string
-	{
-		if ($rp->getDocComment() === false) {
-			return null;
-		}
-
-		$factory = phpDocumentor\Reflection\DocBlockFactory::createInstance();
-		$docblock = $factory->create($rp->getDocComment());
-
-		foreach ($docblock->getTags() as $tag) {
-			if ($tag->getName() === $name) {
-				return trim((string) $tag);
-			}
-		}
-
-		return null;
-	}
-
-	/**
 	 * This method was inspired with same method in Nette framework
 	 *
 	 * @param ReflectionMethod $method
@@ -225,7 +177,56 @@ final class StateFactory
 			if ($rt instanceof ReflectionType && method_exists($rt, 'getName')) {
 				$type = $rt->getName();
 
-				return strtolower($type) === 'self' && $param->getDeclaringClass() !== null ? $param->getDeclaringClass()->getName() : $type;
+				return strtolower($type) === 'self' && $param->getDeclaringClass() !== null ? $param->getDeclaringClass()
+					->getName() : $type;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param Reflector $rc
+	 *
+	 * @return ReflectionProperty[]
+	 */
+	private static function getProperties(Reflector $rc): array
+	{
+		if (!$rc instanceof ReflectionClass) {
+			return [];
+		}
+
+		$properties = [];
+
+		foreach ($rc->getProperties() as $rcProperty) {
+			$properties[] = $rcProperty;
+		}
+
+		if ($rc->getParentClass() !== false) {
+			$properties = array_merge($properties, self::getProperties($rc->getParentClass()));
+		}
+
+		return $properties;
+	}
+
+	/**
+	 * @param ReflectionProperty $rp
+	 * @param string $name
+	 *
+	 * @return string|NULL
+	 */
+	private static function parseAnnotation(ReflectionProperty $rp, string $name): ?string
+	{
+		if ($rp->getDocComment() === false) {
+			return null;
+		}
+
+		$factory = phpDocumentor\Reflection\DocBlockFactory::createInstance();
+		$docblock = $factory->create($rp->getDocComment());
+
+		foreach ($docblock->getTags() as $tag) {
+			if ($tag->getName() === $name) {
+				return trim((string) $tag);
 			}
 		}
 

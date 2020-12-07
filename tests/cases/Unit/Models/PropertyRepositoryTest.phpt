@@ -41,6 +41,52 @@ final class PropertyRepositoryTest extends BaseMockeryTestCase
 	/**
 	 * @param Uuid\UuidInterface $id
 	 * @param mixed[] $data
+	 *
+	 * @return Mockery\MockInterface|Connections\ICouchDbConnection
+	 */
+	private function mockCouchDbWithDocument(
+		Uuid\UuidInterface $id,
+		array $data
+	): Mockery\MockInterface {
+		$data['_id'] = $data['id'];
+
+		$couchDbClient = Mockery::mock(PHPOnCouch\CouchClient::class);
+		$couchDbClient
+			->shouldReceive('asCouchDocuments')
+			->getMock()
+			->shouldReceive('find')
+			->with([
+				'id' => [
+					'$eq' => $id->toString(),
+				],
+			])
+			->andReturn([(object) $data])
+			->times(1);
+
+		$couchDbConnection = Mockery::mock(Connections\ICouchDbConnection::class);
+		$couchDbConnection
+			->shouldReceive('getClient')
+			->andReturn($couchDbClient);
+
+		return $couchDbConnection;
+	}
+
+	/**
+	 * @param Mockery\MockInterface|Connections\ICouchDbConnection $couchDbClient
+	 *
+	 * @return Models\PropertyRepository
+	 */
+	private function createRepository(
+		Mockery\MockInterface $couchDbClient
+	): Models\PropertyRepository {
+		$logger = Mockery::mock(Log\LoggerInterface::class);
+
+		return new Models\PropertyRepository($couchDbClient, $logger);
+	}
+
+	/**
+	 * @param Uuid\UuidInterface $id
+	 * @param mixed[] $data
 	 * @param mixed $value
 	 *
 	 * @dataProvider ./../../../fixtures/Models/fetchPropertyValue.php
@@ -80,52 +126,6 @@ final class PropertyRepositoryTest extends BaseMockeryTestCase
 
 		Assert::type(States\Property::class, $state);
 		Assert::equal($expected, $state->getExpected());
-	}
-
-	/**
-	 * @param Mockery\MockInterface|Connections\ICouchDbConnection $couchDbClient
-	 *
-	 * @return Models\PropertyRepository
-	 */
-	private function createRepository(
-		Mockery\MockInterface $couchDbClient
-	): Models\PropertyRepository {
-		$logger = Mockery::mock(Log\LoggerInterface::class);
-
-		return new Models\PropertyRepository($couchDbClient, $logger);
-	}
-
-	/**
-	 * @param Uuid\UuidInterface $id
-	 * @param mixed[] $data
-	 *
-	 * @return Mockery\MockInterface|Connections\ICouchDbConnection
-	 */
-	private function mockCouchDbWithDocument(
-		Uuid\UuidInterface $id,
-		array $data
-	): Mockery\MockInterface {
-		$data['_id'] = $data['id'];
-
-		$couchDbClient = Mockery::mock(PHPOnCouch\CouchClient::class);
-		$couchDbClient
-			->shouldReceive('asCouchDocuments')
-			->getMock()
-			->shouldReceive('find')
-			->with([
-				'id' => [
-					'$eq' => $id->toString(),
-				],
-			])
-			->andReturn([(object) $data])
-			->times(1);
-
-		$couchDbConnection = Mockery::mock(Connections\ICouchDbConnection::class);
-		$couchDbConnection
-			->shouldReceive('getClient')
-			->andReturn($couchDbClient);
-
-		return $couchDbConnection;
 	}
 
 }

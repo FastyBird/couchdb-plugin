@@ -4,7 +4,7 @@
  * Property.php
  *
  * @license        More in license.md
- * @copyright      https://fastybird.com
+ * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        FastyBird:CouchDbStoragePlugin!
  * @subpackage     States
@@ -50,49 +50,9 @@ class Property extends State implements IProperty
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setValue(?string $value): void
+	public function getCreated(): ?DateTimeInterface
 	{
-		$this->value = $value;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getValue(): ?string
-	{
-		return $this->value;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setExpected(?string $expected): void
-	{
-		$this->expected = $expected;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getExpected(): ?string
-	{
-		return $this->expected;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setPending(bool $pending): void
-	{
-		$this->pending = $pending;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function isPending(): bool
-	{
-		return $this->pending;
+		return $this->created !== null ? new DateTimeImmutable($this->created) : null;
 	}
 
 	/**
@@ -106,9 +66,9 @@ class Property extends State implements IProperty
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getCreated(): ?DateTimeInterface
+	public function getUpdated(): ?DateTimeInterface
 	{
-		return $this->created !== null ? new DateTimeImmutable($this->created) : null;
+		return $this->updated !== null ? new DateTimeImmutable($this->updated) : null;
 	}
 
 	/**
@@ -122,14 +82,6 @@ class Property extends State implements IProperty
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getUpdated(): ?DateTimeInterface
-	{
-		return $this->updated !== null ? new DateTimeImmutable($this->updated) : null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function toArray(): array
 	{
 		return array_merge([
@@ -137,6 +89,54 @@ class Property extends State implements IProperty
 			'expected' => $this->getExpected(),
 			'pending'  => $this->isPending(),
 		], parent::toArray());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getValue(): ?string
+	{
+		return $this->value;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setValue(?string $value): void
+	{
+		$this->value = $value;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getExpected(): ?string
+	{
+		return $this->expected;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setExpected(?string $expected): void
+	{
+		$this->expected = $expected;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function isPending(): bool
+	{
+		return $this->pending;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setPending(bool $pending): void
+	{
+		$this->pending = $pending;
 	}
 
 }

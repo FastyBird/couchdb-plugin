@@ -4,7 +4,7 @@
  * State.php
  *
  * @license        More in license.md
- * @copyright      https://fastybird.com
+ * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        FastyBird:CouchDbStoragePlugin!
  * @subpackage     States
@@ -55,14 +55,6 @@ abstract class State implements IState
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getId(): Uuid\UuidInterface
-	{
-		return $this->id;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getDocument(): PHPOnCouch\CouchDocument
 	{
 		return $this->document;
@@ -74,8 +66,17 @@ abstract class State implements IState
 	public function toArray(): array
 	{
 		return [
-			'id' => $this->getId()->toString(),
+			'id' => $this->getId()
+				->toString(),
 		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getId(): Uuid\UuidInterface
+	{
+		return $this->id;
 	}
 
 }

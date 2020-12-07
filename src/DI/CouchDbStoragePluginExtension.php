@@ -34,17 +34,39 @@ class CouchDbStoragePluginExtension extends DI\CompilerExtension
 {
 
 	/**
+	 * @param Nette\Configurator $config
+	 * @param string $extensionName
+	 *
+	 * @return void
+	 */
+	public static function register(
+		Nette\Configurator $config,
+		string $extensionName = 'fbCouchDbStoragePlugin'
+	): void {
+		$config->onCompile[] = function (
+			Nette\Configurator $config,
+			DI\Compiler $compiler
+		) use ($extensionName): void {
+			$compiler->addExtension($extensionName, new CouchDbStoragePluginExtension());
+		};
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function getConfigSchema(): Schema\Schema
 	{
 		return Schema\Expect::structure([
 			'connection' => Schema\Expect::structure([
-				'database' => Schema\Expect::string()->default('state_storage'),
-				'host'     => Schema\Expect::string()->default('127.0.0.1'),
+				'database' => Schema\Expect::string()
+					->default('state_storage'),
+				'host'     => Schema\Expect::string()
+					->default('127.0.0.1'),
 				'port'     => Schema\Expect::int(5672),
-				'username' => Schema\Expect::string('guest')->nullable(),
-				'password' => Schema\Expect::string('guest')->nullable(),
+				'username' => Schema\Expect::string('guest')
+					->nullable(),
+				'password' => Schema\Expect::string('guest')
+					->nullable(),
 			]),
 		]);
 	}
@@ -73,24 +95,6 @@ class CouchDbStoragePluginExtension extends DI\CompilerExtension
 
 		$builder->addDefinition(null)
 			->setType(Models\PropertyRepository::class);
-	}
-
-	/**
-	 * @param Nette\Configurator $config
-	 * @param string $extensionName
-	 *
-	 * @return void
-	 */
-	public static function register(
-		Nette\Configurator $config,
-		string $extensionName = 'fbCouchDbStoragePlugin'
-	): void {
-		$config->onCompile[] = function (
-			Nette\Configurator $config,
-			DI\Compiler $compiler
-		) use ($extensionName): void {
-			$compiler->addExtension($extensionName, new CouchDbStoragePluginExtension());
-		};
 	}
 
 }

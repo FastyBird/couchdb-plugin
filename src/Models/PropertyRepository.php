@@ -4,7 +4,7 @@
  * PropertyRepository.php
  *
  * @license        More in license.md
- * @copyright      https://fastybird.com
+ * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        FastyBird:CouchDbStoragePlugin!
  * @subpackage     Models
@@ -17,7 +17,6 @@ namespace FastyBird\CouchDbStoragePlugin\Models;
 
 use FastyBird\CouchDbStoragePlugin\Connections;
 use FastyBird\CouchDbStoragePlugin\Exceptions;
-use FastyBird\CouchDbStoragePlugin\Models;
 use FastyBird\CouchDbStoragePlugin\States;
 use Nette;
 use PHPOnCouch;
@@ -57,6 +56,21 @@ class PropertyRepository implements IPropertyRepository
 	/**
 	 * {@inheritDoc}
 	 */
+	public function findValue(
+		Uuid\UuidInterface $id
+	) {
+		$state = $this->findOne($id);
+
+		if ($state === null) {
+			return null;
+		}
+
+		return $state->getValue();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function findOne(
 		Uuid\UuidInterface $id
 	): ?States\IProperty {
@@ -73,36 +87,6 @@ class PropertyRepository implements IPropertyRepository
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public function findValue(
-		Uuid\UuidInterface $id
-	) {
-		$state = $this->findOne($id);
-
-		if ($state === null) {
-			return null;
-		}
-
-		return $state->getValue();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function findExpected(
-		Uuid\UuidInterface $id
-	) {
-		$state = $this->findOne($id);
-
-		if ($state === null) {
-			return null;
-		}
-
-		return $state->getExpected();
-	}
-
-	/**
 	 * @param Uuid\UuidInterface $id
 	 *
 	 * @return PHPOnCouch\CouchDocument|null
@@ -111,14 +95,16 @@ class PropertyRepository implements IPropertyRepository
 		Uuid\UuidInterface $id
 	): ?PHPOnCouch\CouchDocument {
 		try {
-			$this->dbClient->getClient()->asCouchDocuments();
+			$this->dbClient->getClient()
+				->asCouchDocuments();
 
 			/** @var stdClass[]|mixed $docs */
-			$docs = $this->dbClient->getClient()->find([
-				'id' => [
-					'$eq' => $id->toString(),
-				],
-			]);
+			$docs = $this->dbClient->getClient()
+				->find([
+					'id' => [
+						'$eq' => $id->toString(),
+					],
+				]);
 
 			if (is_array($docs) && count($docs) >= 1) {
 				$doc = new PHPOnCouch\CouchDocument($this->dbClient->getClient());
@@ -144,6 +130,21 @@ class PropertyRepository implements IPropertyRepository
 
 			throw new Exceptions\InvalidStateException('Document could not be loaded from database', 0, $ex);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function findExpected(
+		Uuid\UuidInterface $id
+	) {
+		$state = $this->findOne($id);
+
+		if ($state === null) {
+			return null;
+		}
+
+		return $state->getExpected();
 	}
 
 }
