@@ -57,12 +57,16 @@ class PropertiesManager implements IPropertiesManager
 
 	/** @var Closure[] */
 	public $onAfterDelete = [];
+
 	/** @var Log\LoggerInterface */
 	protected $logger;
+
 	/** @var int[] */
 	private $retries = [];
+
 	/** @var Connections\ICouchDbConnection */
 	private $dbClient;
+
 	/** @var DateTimeFactory\DateTimeFactory */
 	private $dateFactory;
 
