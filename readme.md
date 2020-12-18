@@ -1,4 +1,4 @@
-# FastyBird CouchDB storage plugin library
+# FastyBird CouchDB storage plugin
 
 [![Build Status](https://img.shields.io/travis/com/FastyBird/couchdb-storage-plugin.svg?style=flat-square)](https://travis-ci.com/FastyBird/couchdb-storage-plugin)
 [![Code coverage](https://img.shields.io/coveralls/FastyBird/couchdb-storage-plugin.svg?style=flat-square)](https://coveralls.io/r/FastyBird/couchdb-storage-plugin)
@@ -8,9 +8,9 @@
 [![Latest stable](https://img.shields.io/packagist/v/FastyBird/couchdb-storage-plugin.svg?style=flat-square)](https://packagist.org/packages/FastyBird/couchdb-storage-plugin)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
 
-## What is FastyBird CouchDB storage plugin library?
+## What is FastyBird CouchDB storage plugin?
 
-This is a [Nette framework](https://nette.org) extension which is implementing CouchDB document storage for [FastyBird](https://www.fastybird.com) IoT services
+This is a [Nette framework](https://nette.org) extension which is implementing [CouchDB](https://couchdb.apache.org) document storage for [FastyBird](https://www.fastybird.com) IoT services
 
 ## Installation
 
