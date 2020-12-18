@@ -34,10 +34,10 @@ abstract class State implements IState
 	use Nette\SmartObject;
 
 	/** @var Uuid\UuidInterface */
-	private $id;
+	private Uuid\UuidInterface $id;
 
 	/** @var PHPOnCouch\CouchDocument */
-	private $document;
+	private PHPOnCouch\CouchDocument $document;
 
 	public function __construct(
 		string $id,

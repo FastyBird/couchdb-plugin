@@ -50,25 +50,25 @@ class PropertiesManager implements IPropertiesManager
 	private const MAX_RETRIES = 5;
 
 	/** @var Closure[] */
-	public $onAfterCreate = [];
+	public array $onAfterCreate = [];
 
 	/** @var Closure[] */
-	public $onAfterUpdate = [];
+	public array $onAfterUpdate = [];
 
 	/** @var Closure[] */
-	public $onAfterDelete = [];
+	public array $onAfterDelete = [];
 
 	/** @var Log\LoggerInterface */
-	protected $logger;
+	protected Log\LoggerInterface $logger;
 
 	/** @var int[] */
-	private $retries = [];
+	private array $retries = [];
 
 	/** @var Connections\ICouchDbConnection */
-	private $dbClient;
+	private Connections\ICouchDbConnection $dbClient;
 
 	/** @var DateTimeFactory\DateTimeFactory */
-	private $dateFactory;
+	private DateTimeFactory\DateTimeFactory $dateFactory;
 
 	public function __construct(
 		Connections\ICouchDbConnection $dbClient,

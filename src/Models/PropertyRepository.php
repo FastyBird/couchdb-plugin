@@ -39,10 +39,10 @@ class PropertyRepository implements IPropertyRepository
 	use Nette\SmartObject;
 
 	/** @var Connections\ICouchDbConnection */
-	private $dbClient;
+	private Connections\ICouchDbConnection $dbClient;
 
 	/** @var Log\LoggerInterface */
-	private $logger;
+	private Log\LoggerInterface $logger;
 
 	public function __construct(
 		Connections\ICouchDbConnection $dbClient,

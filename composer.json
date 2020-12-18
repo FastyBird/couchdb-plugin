@@ -34,7 +34,7 @@
   "minimum-stability" : "dev",
 
   "require" : {
-    "php": ">=7.3.0",
+    "php": ">=7.4.0",
     "consistence/consistence": "^2.0",
     "fastybird/datetime-factory": "@dev",
     "nette/bootstrap": "^3.0",

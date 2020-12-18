@@ -33,19 +33,19 @@ class Property extends State implements IProperty
 	use Nette\SmartObject;
 
 	/** @var string|null */
-	private $value = null;
+	private ?string $value = null;
 
 	/** @var string|null */
-	private $expected = null;
+	private ?string $expected = null;
 
 	/** @var bool */
-	private $pending = false;
+	private bool $pending = false;
 
 	/** @var string|null */
-	private $created = null;
+	private ?string $created = null;
 
 	/** @var string|null */
-	private $updated = null;
+	private ?string $updated = null;
 
 	/**
 	 * {@inheritDoc}

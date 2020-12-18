@@ -35,25 +35,25 @@ final class CouchDbConnection implements ICouchDbConnection
 	use Nette\SmartObject;
 
 	/** @var string */
-	private $database;
+	private string $database;
 
 	/** @var string */
-	private $host;
+	private string $host;
 
 	/** @var int */
-	private $port;
+	private int $port;
 
 	/** @var string|null */
-	private $username;
+	private ?string $username;
 
 	/** @var string|null */
-	private $password;
+	private ?string $password;
 
 	/** @var PHPOnCouch\CouchClient|null */
-	private $client = null;
+	private ?PHPOnCouch\CouchClient $client = null;
 
 	/** @var Log\LoggerInterface */
-	private $logger;
+	private Log\LoggerInterface $logger;
 
 	public function __construct(
 		string $database,
