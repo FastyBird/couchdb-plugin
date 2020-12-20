@@ -17,6 +17,7 @@ namespace FastyBird\CouchDbStoragePlugin\DI;
 
 use FastyBird\CouchDbStoragePlugin\Connections;
 use FastyBird\CouchDbStoragePlugin\Models;
+use FastyBird\CouchDbStoragePlugin\Subscribers;
 use Nette;
 use Nette\DI;
 use Nette\Schema;
@@ -95,6 +96,9 @@ class CouchDbStoragePluginExtension extends DI\CompilerExtension
 
 		$builder->addDefinition(null)
 			->setType(Models\PropertyRepository::class);
+
+		$builder->addDefinition(null)
+			->setType(Subscribers\EntitiesSubscriber::class);
 	}
 
 }
