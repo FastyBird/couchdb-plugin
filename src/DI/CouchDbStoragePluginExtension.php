@@ -16,6 +16,7 @@
 namespace FastyBird\CouchDbStoragePlugin\DI;
 
 use FastyBird\CouchDbStoragePlugin\Connections;
+use FastyBird\CouchDbStoragePlugin\Events;
 use FastyBird\CouchDbStoragePlugin\Models;
 use FastyBird\CouchDbStoragePlugin\Subscribers;
 use Nette;
@@ -99,6 +100,29 @@ class CouchDbStoragePluginExtension extends DI\CompilerExtension
 
 		$builder->addDefinition(null)
 			->setType(Subscribers\EntitiesSubscriber::class);
+
+		$builder->addDefinition('event.propertyState')
+			->setType(Events\PropertyStateUpdatedHandler::class);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function beforeCompile(): void
+	{
+		parent::beforeCompile();
+
+		$builder = $this->getContainerBuilder();
+
+		$propertiesManagerServiceName = $builder->getByType(Models\PropertiesManager::class);
+
+		if ($propertiesManagerServiceName !== null) {
+			/** @var DI\Definitions\ServiceDefinition $propertiesManagerService */
+			$propertiesManagerService = $builder->getDefinition($propertiesManagerServiceName);
+
+			$propertiesManagerService
+				->addSetup('$onAfterUpdate[]', ['@' . $this->prefix('event.propertyState')]);
+		}
 	}
 
 }
