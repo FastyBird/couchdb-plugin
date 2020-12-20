@@ -16,6 +16,7 @@
 namespace FastyBird\CouchDbStoragePlugin\States;
 
 use DateTimeInterface;
+use FastyBird\DevicesModule\States as DevicesModuleStates;
 
 /**
  * Property interface
@@ -25,7 +26,7 @@ use DateTimeInterface;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-interface IProperty extends IState
+interface IProperty extends IState, DevicesModuleStates\IProperty
 {
 
 	/**
@@ -36,33 +37,11 @@ interface IProperty extends IState
 	public function setValue(?string $value): void;
 
 	/**
-	 * @return string|null
-	 */
-	public function getValue(): ?string;
-
-	/**
-	 * @param string|null $expected
-	 *
-	 * @return void
-	 */
-	public function setExpected(?string $expected): void;
-
-	/**
-	 * @return string|null
-	 */
-	public function getExpected(): ?string;
-
-	/**
 	 * @param bool $pending
 	 *
 	 * @return void
 	 */
 	public function setPending(bool $pending): void;
-
-	/**
-	 * @return bool
-	 */
-	public function isPending(): bool;
 
 	/**
 	 * @param string|null $created

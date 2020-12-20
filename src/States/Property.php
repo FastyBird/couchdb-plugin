@@ -118,9 +118,9 @@ class Property extends State implements IProperty
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setExpected(?string $expected): void
+	public function setExpected($expected): void
 	{
-		$this->expected = $expected;
+		$this->expected = $expected !== null ? (string) $expected : null;
 	}
 
 	/**
