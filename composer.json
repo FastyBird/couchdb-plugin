@@ -37,7 +37,6 @@
     "php": ">=7.4.0",
     "consistence/consistence": "^2.0",
     "cweagans/composer-patches": "^1.6",
-    "fastybird/datetime-factory": "^0.1",
     "nette/bootstrap": "^3.0",
     "nette/di": "^3.0",
     "nette/utils": "^3.0",
