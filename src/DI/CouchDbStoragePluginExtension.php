@@ -80,7 +80,7 @@ class CouchDbStoragePluginExtension extends DI\CompilerExtension
 		/** @var stdClass $configuration */
 		$configuration = $this->getConfig();
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('connection'))
 			->setType(Connections\CouchDbConnection::class)
 			->setArguments([
 				'database' => $configuration->connection->database,
@@ -90,10 +90,10 @@ class CouchDbStoragePluginExtension extends DI\CompilerExtension
 				'password' => $configuration->connection->password,
 			]);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('model.statesManager'))
 			->setType(Models\StatesManager::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('model.stateRepository'))
 			->setType(Models\StateRepository::class);
 	}
 
