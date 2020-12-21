@@ -97,24 +97,4 @@ class CouchDbStoragePluginExtension extends DI\CompilerExtension
 			->setType(Models\StateRepository::class);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function beforeCompile(): void
-	{
-		parent::beforeCompile();
-
-		$builder = $this->getContainerBuilder();
-
-		$propertiesManagerServiceName = $builder->getByType(Models\StatesManager::class);
-
-		if ($propertiesManagerServiceName !== null) {
-			/** @var DI\Definitions\ServiceDefinition $propertiesManagerService */
-			$propertiesManagerService = $builder->getDefinition($propertiesManagerServiceName);
-
-			$propertiesManagerService
-				->addSetup('$onAfterUpdate[]', ['@' . $this->prefix('event.propertyState')]);
-		}
-	}
-
 }
