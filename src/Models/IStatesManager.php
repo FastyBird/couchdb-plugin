@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * IPropertiesManager.php
+ * IStatesManager.php
  *
  * @license        More in license.md
  * @copyright      https://www.fastybird.com
@@ -20,56 +20,47 @@ use Nette\Utils;
 use Ramsey\Uuid;
 
 /**
- * Base properties manager interface
+ * Base states manager interface
  *
  * @package        FastyBird:CouchDbStoragePlugin!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-interface IPropertiesManager
+interface IStatesManager
 {
 
 	/**
 	 * @param Uuid\UuidInterface $id
 	 * @param Utils\ArrayHash $values
+	 * @param string $class
 	 *
-	 * @return States\IProperty
+	 * @return States\IState
 	 */
 	public function create(
 		Uuid\UuidInterface $id,
-		Utils\ArrayHash $values
-	): States\IProperty;
+		Utils\ArrayHash $values,
+		string $class = States\State::class
+	): States\IState;
 
 	/**
-	 * @param States\IProperty $state
+	 * @param States\IState $state
 	 * @param Utils\ArrayHash $values
 	 *
-	 * @return States\IProperty
+	 * @return States\IState
 	 */
 	public function update(
-		States\IProperty $state,
+		States\IState $state,
 		Utils\ArrayHash $values
-	): States\IProperty;
+	): States\IState;
 
 	/**
-	 * @param States\IProperty $state
-	 * @param Utils\ArrayHash $values
-	 *
-	 * @return States\IProperty
-	 */
-	public function updateState(
-		States\IProperty $state,
-		Utils\ArrayHash $values
-	): States\IProperty;
-
-	/**
-	 * @param States\IProperty $state
+	 * @param States\IState $state
 	 *
 	 * @return bool
 	 */
 	public function delete(
-		States\IProperty $state
+		States\IState $state
 	): bool;
 
 }

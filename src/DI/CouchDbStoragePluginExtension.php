@@ -16,9 +16,7 @@
 namespace FastyBird\CouchDbStoragePlugin\DI;
 
 use FastyBird\CouchDbStoragePlugin\Connections;
-use FastyBird\CouchDbStoragePlugin\Events;
 use FastyBird\CouchDbStoragePlugin\Models;
-use FastyBird\CouchDbStoragePlugin\Subscribers;
 use Nette;
 use Nette\DI;
 use Nette\Schema;
@@ -93,16 +91,10 @@ class CouchDbStoragePluginExtension extends DI\CompilerExtension
 			]);
 
 		$builder->addDefinition(null)
-			->setType(Models\PropertiesManager::class);
+			->setType(Models\StatesManager::class);
 
 		$builder->addDefinition(null)
-			->setType(Models\PropertyRepository::class);
-
-		$builder->addDefinition(null)
-			->setType(Subscribers\EntitiesSubscriber::class);
-
-		$builder->addDefinition('event.propertyState')
-			->setType(Events\PropertyStateUpdatedHandler::class);
+			->setType(Models\StateRepository::class);
 	}
 
 	/**
@@ -114,7 +106,7 @@ class CouchDbStoragePluginExtension extends DI\CompilerExtension
 
 		$builder = $this->getContainerBuilder();
 
-		$propertiesManagerServiceName = $builder->getByType(Models\PropertiesManager::class);
+		$propertiesManagerServiceName = $builder->getByType(Models\StatesManager::class);
 
 		if ($propertiesManagerServiceName !== null) {
 			/** @var DI\Definitions\ServiceDefinition $propertiesManagerService */

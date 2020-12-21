@@ -4,18 +4,13 @@ use FastyBird\CouchDbStoragePlugin\States;
 
 return [
 	'one' => [
-		States\Property::class,
-		[
-			'device'   => 'device-name',
-			'property' => 'property-name',
-		],
+		States\State::class,
+		[],
 	],
 	'two' => [
-		States\Property::class,
+		States\State::class,
 		[
-			'id'       => 'invalid-string',
-			'device'   => 'device-name',
-			'property' => 'property-name',
+			'id' => 'invalid-string',
 		],
 	],
 ];

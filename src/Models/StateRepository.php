@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * PropertyRepository.php
+ * StateRepository.php
  *
  * @license        More in license.md
  * @copyright      https://www.fastybird.com
@@ -33,7 +33,7 @@ use Throwable;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class PropertyRepository implements IPropertyRepository
+class StateRepository implements IStateRepository
 {
 
 	use Nette\SmartObject;
@@ -56,34 +56,17 @@ class PropertyRepository implements IPropertyRepository
 	/**
 	 * {@inheritDoc}
 	 */
-	public function findValue(
-		Uuid\UuidInterface $id
-	) {
-		$state = $this->findOne($id);
-
-		if ($state === null) {
-			return null;
-		}
-
-		return $state->getValue();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function findOne(
-		Uuid\UuidInterface $id
-	): ?States\IProperty {
+		Uuid\UuidInterface $id,
+		string $class = States\State::class
+	): ?States\IState {
 		$doc = $this->getDocument($id);
 
 		if ($doc === null) {
 			return null;
 		}
 
-		/** @var States\IProperty $state */
-		$state = States\StateFactory::create(States\Property::class, $doc);
-
-		return $state;
+		return States\StateFactory::create($class, $doc);
 	}
 
 	/**
@@ -130,21 +113,6 @@ class PropertyRepository implements IPropertyRepository
 
 			throw new Exceptions\InvalidStateException('Document could not be loaded from database', 0, $ex);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function findExpected(
-		Uuid\UuidInterface $id
-	) {
-		$state = $this->findOne($id);
-
-		if ($state === null) {
-			return null;
-		}
-
-		return $state->getExpected();
 	}
 
 }

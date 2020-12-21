@@ -36,9 +36,8 @@
   "require" : {
     "php": ">=7.4.0",
     "consistence/consistence": "^2.0",
-    "fastybird/application-exchange": "@dev",
+    "cweagans/composer-patches": "^1.6",
     "fastybird/datetime-factory": "^0.1",
-    "fastybird/devices-module": "@dev",
     "nette/bootstrap": "^3.0",
     "nette/di": "^3.0",
     "nette/utils": "^3.0",
@@ -77,5 +76,13 @@
 
   "config" : {
     "sort-packages" : true
+  },
+
+  "extra" : {
+    "patches" : {
+      "nette/utils" : {
+        "Bug: Offset check with null support" : "patches/nette.array.offsetCheck.diff"
+      }
+    }
   }
 }

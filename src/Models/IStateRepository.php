@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * IPropertyRepository.php
+ * IStateRepository.php
  *
  * @license        More in license.md
  * @copyright      https://www.fastybird.com
@@ -19,41 +19,25 @@ use FastyBird\CouchDbStoragePlugin\States;
 use Ramsey\Uuid;
 
 /**
- * Property state repository interface
+ * State repository interface
  *
  * @package        FastyBird:CouchDbStoragePlugin!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-interface IPropertyRepository
+interface IStateRepository
 {
 
 	/**
 	 * @param Uuid\UuidInterface $id
+	 * @param string $class
 	 *
-	 * @return States\IProperty|null
+	 * @return States\IState|null
 	 */
 	public function findOne(
-		Uuid\UuidInterface $id
-	): ?States\IProperty;
-
-	/**
-	 * @param Uuid\UuidInterface $id
-	 *
-	 * @return int|float|string|bool|null
-	 */
-	public function findValue(
-		Uuid\UuidInterface $id
-	);
-
-	/**
-	 * @param Uuid\UuidInterface $id
-	 *
-	 * @return int|float|string|bool|null
-	 */
-	public function findExpected(
-		Uuid\UuidInterface $id
-	);
+		Uuid\UuidInterface $id,
+		string $class = States\State::class
+	): ?States\IState;
 
 }

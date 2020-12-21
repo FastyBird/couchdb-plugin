@@ -28,7 +28,7 @@ use Ramsey\Uuid;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-abstract class State implements IState
+class State implements IState
 {
 
 	use Nette\SmartObject;
@@ -63,20 +63,19 @@ abstract class State implements IState
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
+	public function getId(): Uuid\UuidInterface
 	{
-		return [
-			'id' => $this->getId()
-				->toString(),
-		];
+		return $this->id;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getId(): Uuid\UuidInterface
+	public function toArray(): array
 	{
-		return $this->id;
+		return [
+			'id' => $this->getId()->toString(),
+		];
 	}
 
 }

@@ -17,7 +17,7 @@ require_once __DIR__ . '/../../../bootstrap.php';
 /**
  * @testCase
  */
-final class PropertyRepositoryTest extends BaseMockeryTestCase
+final class StateRepositoryTest extends BaseMockeryTestCase
 {
 
 	public function testFetchEntity(): void
@@ -35,7 +35,7 @@ final class PropertyRepositoryTest extends BaseMockeryTestCase
 
 		$state = $repository->findOne($id);
 
-		Assert::type(States\Property::class, $state);
+		Assert::type(States\State::class, $state);
 	}
 
 	/**
@@ -74,61 +74,17 @@ final class PropertyRepositoryTest extends BaseMockeryTestCase
 	/**
 	 * @param Mockery\MockInterface|Connections\ICouchDbConnection $couchDbClient
 	 *
-	 * @return Models\PropertyRepository
+	 * @return Models\StateRepository
 	 */
 	private function createRepository(
 		Mockery\MockInterface $couchDbClient
-	): Models\PropertyRepository {
+	): Models\StateRepository {
 		$logger = Mockery::mock(Log\LoggerInterface::class);
 
-		return new Models\PropertyRepository($couchDbClient, $logger);
-	}
-
-	/**
-	 * @param Uuid\UuidInterface $id
-	 * @param mixed[] $data
-	 * @param mixed $value
-	 *
-	 * @dataProvider ./../../../fixtures/Models/fetchPropertyValue.php
-	 */
-	public function testFetchValue(
-		Uuid\UuidInterface $id,
-		array $data,
-		$value
-	): void {
-		$couchDbClient = $this->mockCouchDbWithDocument($id, $data);
-
-		$repository = $this->createRepository($couchDbClient);
-
-		$state = $repository->findOne($id);
-
-		Assert::type(States\Property::class, $state);
-		Assert::equal($value, $state->getValue());
-	}
-
-	/**
-	 * @param Uuid\UuidInterface $id
-	 * @param mixed[] $data
-	 * @param mixed $expected
-	 *
-	 * @dataProvider ./../../../fixtures/Models/fetchPropertyExpected.php
-	 */
-	public function testFetchExpected(
-		Uuid\UuidInterface $id,
-		array $data,
-		$expected
-	): void {
-		$couchDbClient = $this->mockCouchDbWithDocument($id, $data);
-
-		$repository = $this->createRepository($couchDbClient);
-
-		$state = $repository->findOne($id);
-
-		Assert::type(States\Property::class, $state);
-		Assert::equal($expected, $state->getExpected());
+		return new Models\StateRepository($couchDbClient, $logger);
 	}
 
 }
 
-$test_case = new PropertyRepositoryTest();
+$test_case = new StateRepositoryTest();
 $test_case->run();

@@ -5,17 +5,15 @@ use Ramsey\Uuid\Uuid;
 
 return [
 	'one' => [
-		States\Property::class,
+		States\State::class,
 		[
-			'id' => Uuid::uuid4()
-				->toString(),
+			'id' => Uuid::uuid4()->toString(),
 		],
 	],
 	'two' => [
-		States\Property::class,
+		States\State::class,
 		[
-			'id' => Uuid::uuid4()
-				->toString(),
+			'id' => Uuid::uuid4()->toString(),
 		],
 	],
 ];
