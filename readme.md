@@ -1,6 +1,6 @@
 # FastyBird CouchDB storage plugin
 
-[![Build Status](https://badgen.net/github/checks/FastyBird/couchdb-storage-plugin/master?cache=300&style=flast-square)](https://travis-ci.com/FastyBird/couchdb-storage-plugin)
+[![Build Status](https://badgen.net/github/checks/FastyBird/couchdb-storage-plugin/master?cache=300&style=flast-square)](https://github.com/FastyBird/couchdb-storage-plugin/actions)
 [![Code coverage](https://badgen.net/coveralls/c/github/FastyBird/couchdb-storage-plugin?cache=300&style=flast-square)](https://coveralls.io/r/FastyBird/couchdb-storage-plugin)
 ![PHP](https://badgen.net/packagist/php/FastyBird/couchdb-storage-plugin?cache=300&style=flast-square)
 [![Licence](https://badgen.net/packagist/license/FastyBird/couchdb-storage-plugin?cache=300&style=flast-square)](https://packagist.org/packages/FastyBird/couchdb-storage-plugin)
