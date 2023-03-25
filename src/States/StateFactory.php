@@ -16,6 +16,7 @@
 namespace FastyBird\Plugin\CouchDb\States;
 
 use FastyBird\Plugin\CouchDb\Exceptions;
+use FastyBird\Plugin\RedisDb\States;
 use phpDocumentor;
 use PHPOnCouch;
 use ReflectionClass;
