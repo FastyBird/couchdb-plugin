@@ -1,91 +1,94 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Fixtures;
+namespace FastyBird\Plugin\CouchDb\Tests\Fixtures;
 
 use DateTimeImmutable;
 use DateTimeInterface;
 use Exception;
-use FastyBird\CouchDbStoragePlugin\States;
+use FastyBird\Plugin\CouchDb\States;
+use function array_merge;
+use const DATE_ATOM;
 
 class CustomState extends States\State
 {
 
-	public const CREATE_FIELDS = [
-		0         => 'id',
-		1         => 'value',
-		'created' => false,
-	];
+	private string|null $value = null;
 
-	public const UPDATE_FIELDS = [
-		'value',
-		'updated',
-	];
+	private string|null $camelCased = null;
 
-	/** @var string|null */
-	private ?string $value = null;
+	private string|null $created = null;
 
-	/** @var string|null */
-	private ?string $created = null;
+	private string|null $updated = null;
 
-	/** @var string|null */
-	private ?string $updated = null;
-
-	/**
-	 * @return string|null
-	 */
-	public function getValue(): ?string
+	public function getValue(): string|null
 	{
 		return $this->value;
 	}
 
-	/**
-	 * @param string|null $value
-	 *
-	 * @return void
-	 */
-	public function setValue(?string $value): void
+	public function setValue(string|null $value): void
 	{
 		$this->value = $value;
 	}
 
+	public function getCamelCased(): string|null
+	{
+		return $this->camelCased;
+	}
+
+	public function setCamelCased(string|null $camelCased): void
+	{
+		$this->camelCased = $camelCased;
+	}
+
 	/**
-	 * @return DateTimeInterface|null
-	 *
 	 * @throws Exception
 	 */
-	public function getCreated(): ?DateTimeInterface
+	public function getCreated(): DateTimeInterface|null
 	{
 		return $this->created !== null ? new DateTimeImmutable($this->created) : null;
 	}
 
-	/**
-	 * @param string|null $created
-	 *
-	 * @return void
-	 */
-	public function setCreated(?string $created): void
+	public function setCreated(string|null $created): void
 	{
 		$this->created = $created;
 	}
 
 	/**
-	 * @return DateTimeInterface|null
-	 *
 	 * @throws Exception
 	 */
-	public function getUpdated(): ?DateTimeInterface
+	public function getUpdated(): DateTimeInterface|null
 	{
 		return $this->updated !== null ? new DateTimeImmutable($this->updated) : null;
 	}
 
-	/**
-	 * @param string|null $updated
-	 *
-	 * @return void
-	 */
-	public function setUpdated(?string $updated): void
+	public function setUpdated(string|null $updated): void
 	{
 		$this->updated = $updated;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function getCreateFields(): array
+	{
+		return [
+			0 => 'id',
+			1 => 'value',
+			'camelCased' => null,
+			'created' => null,
+		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public static function getUpdateFields(): array
+	{
+		return [
+			'value',
+			'camelCased',
+			'updated',
+		];
 	}
 
 	/**
@@ -94,9 +97,10 @@ class CustomState extends States\State
 	public function toArray(): array
 	{
 		return array_merge([
-			'value'   => $this->getValue(),
-			'created' => $this->getCreated() !== null ? $this->getCreated()->format(DATE_ATOM) : null,
-			'updated' => $this->getUpdated() !== null ? $this->getUpdated()->format(DATE_ATOM) : null,
+			'value' => $this->getValue(),
+			'camelCased' => $this->getCamelCased(),
+			'created' => $this->getCreated()?->format(DATE_ATOM),
+			'updated' => $this->getUpdated()?->format(DATE_ATOM),
 		], parent::toArray());
 	}
 

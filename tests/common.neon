@@ -1,14 +1,26 @@
 #
-# Rabbit MQ plugin DI configuration
+# Plugin DI configuration
 #
-# @license		More in license.md
-# @copyright	https://www.fastybird.com
-# @author		Adam Kadlec <adam.kadlec@fastybird.com>
-# @package		FastyBird:RabbitMqPlugin!
-# @subpackage	config
-# @since		0.1.0
+# @license       More in LICENSE.md
+# @copyright     https://www.fastybird.com
+# @author        Adam Kadlec <adam.kadlec@fastybird.com>
+# @package       FastyBird:CouchDbPlugin!
+# @subpackage    config
+# @since         0.1.0
 #
-# @date			19.07.20
+# @date          19.07.20
 
 php:
-	date.timezone: Europe/Prague
+    date.timezone: Europe/Prague
+
+extensions:
+    ipubPhone               : IPub\Phone\DI\PhoneExtension
+    fbDateTimeFactory       : FastyBird\DateTimeFactory\DI\DateTimeFactoryExtension
+    fbBootstrapLibrary      : FastyBird\Library\Bootstrap\DI\BootstrapExtension
+    fbMetadataLibrary       : FastyBird\Library\Metadata\DI\MetadataExtension
+
+services:
+    - {
+      create: React\EventLoop\Factory::create()
+      type: React\EventLoop\LoopInterface
+    }

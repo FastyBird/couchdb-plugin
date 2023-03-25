@@ -6,16 +6,16 @@
  * @license        More in license.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:CouchDbStoragePlugin!
+ * @package        FastyBird:CouchDbPlugin!
  * @subpackage     States
- * @since          0.1.0
+ * @since          1.0.0
  *
  * @date           08.03.20
  */
 
-namespace FastyBird\CouchDbStoragePlugin\States;
+namespace FastyBird\Plugin\CouchDb\States;
 
-use FastyBird\CouchDbStoragePlugin\Exceptions;
+use FastyBird\Plugin\CouchDb\Exceptions;
 use Nette;
 use PHPOnCouch;
 use Ramsey\Uuid;
@@ -23,59 +23,70 @@ use Ramsey\Uuid;
 /**
  * Base state
  *
- * @package        FastyBird:CouchDbStoragePlugin!
+ * @package        FastyBird:CouchDbPlugin!
  * @subpackage     States
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class State implements IState
+class State
 {
 
 	use Nette\SmartObject;
 
-	/** @var Uuid\UuidInterface */
+	public const CREATED_AT_FIELD = 'createdAt';
+
+	public const UPDATED_AT_FIELD = 'updatedAt';
+
 	private Uuid\UuidInterface $id;
 
-	/** @var PHPOnCouch\CouchDocument */
-	private PHPOnCouch\CouchDocument $document;
-
-	public function __construct(
-		string $id,
-		PHPOnCouch\CouchDocument $document
-	) {
+	/**
+	 * @throws Exceptions\InvalidState
+	 */
+	public function __construct(string $id, private readonly PHPOnCouch\CouchDocument $document)
+	{
 		if (!Uuid\Uuid::isValid($id)) {
-			throw new Exceptions\InvalidStateException('Provided state id is not valid');
+			throw new Exceptions\InvalidState('Provided state id is not valid');
 		}
 
 		$this->id = Uuid\Uuid::fromString($id);
-
-		$this->document = $document;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @return array<string>|array<int, int|string|bool|null>
 	 */
+	public static function getCreateFields(): array
+	{
+		return [
+			'id',
+		];
+	}
+
+	/**
+	 * @return array<string>
+	 */
+	public static function getUpdateFields(): array
+	{
+		return [];
+	}
+
 	public function getDocument(): PHPOnCouch\CouchDocument
 	{
 		return $this->document;
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public function getId(): Uuid\UuidInterface
-	{
-		return $this->id;
-	}
-
-	/**
-	 * {@inheritDoc}
+	 * @return array<string, mixed|null>
 	 */
 	public function toArray(): array
 	{
 		return [
 			'id' => $this->getId()->toString(),
 		];
+	}
+
+	public function getId(): Uuid\UuidInterface
+	{
+		return $this->id;
 	}
 
 }

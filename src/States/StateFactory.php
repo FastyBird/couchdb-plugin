@@ -6,16 +6,16 @@
  * @license        More in license.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:CouchDbStoragePlugin!
+ * @package        FastyBird:CouchDbPlugin!
  * @subpackage     States
- * @since          0.1.0
+ * @since          1.0.0
  *
  * @date           03.03.20
  */
 
-namespace FastyBird\CouchDbStoragePlugin\States;
+namespace FastyBird\Plugin\CouchDb\States;
 
-use FastyBird\CouchDbStoragePlugin\Exceptions;
+use FastyBird\Plugin\CouchDb\Exceptions;
 use phpDocumentor;
 use PHPOnCouch;
 use ReflectionClass;
@@ -26,11 +26,20 @@ use ReflectionProperty;
 use ReflectionType;
 use Reflector;
 use Throwable;
+use function array_merge;
+use function array_search;
+use function call_user_func_array;
+use function class_exists;
+use function is_callable;
+use function method_exists;
+use function strtolower;
+use function trim;
+use function ucfirst;
 
 /**
  * State object factory
  *
- * @package        FastyBird:CouchDbStoragePlugin!
+ * @package        FastyBird:CouchDbPlugin!
  * @subpackage     States
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
@@ -39,17 +48,19 @@ final class StateFactory
 {
 
 	/**
-	 * @param string $stateClass
-	 * @param PHPOnCouch\CouchDocument $document
+	 * @template T of States\State
 	 *
-	 * @return IState
+	 * @phpstan-param class-string<T> $stateClass
+	 *
+	 * @phpstan-return T
+	 *
+	 * @throws Exceptions\InvalidArgument
+	 * @throws Exceptions\InvalidState
 	 */
-	public static function create(
-		string $stateClass,
-		PHPOnCouch\CouchDocument $document
-	): IState {
+	public static function create(string $stateClass, PHPOnCouch\CouchDocument $document): State
+	{
 		if (!class_exists($stateClass)) {
-			throw new Exceptions\InvalidStateException('State could not be created');
+			throw new Exceptions\InvalidState('State could not be created');
 		}
 
 		try {
@@ -57,15 +68,13 @@ final class StateFactory
 
 			$constructor = $rc->getConstructor();
 
-			if ($constructor !== null) {
-				$state = $rc->newInstanceArgs(self::autowireArguments($constructor, $document));
-
-			} else {
-				$state = new $stateClass();
-			}
-
+			$state = $constructor !== null
+				? $rc->newInstanceArgs(
+					self::autowireArguments($constructor, $document),
+				)
+				: new $stateClass();
 		} catch (Throwable $ex) {
-			throw new Exceptions\InvalidStateException('State could not be created', 0, $ex);
+			throw new Exceptions\InvalidState('State could not be created', 0, $ex);
 		}
 
 		$properties = self::getProperties($rc);
@@ -80,13 +89,10 @@ final class StateFactory
 
 				if ($varAnnotation === 'int') {
 					$value = (int) $value;
-
 				} elseif ($varAnnotation === 'float') {
 					$value = (float) $value;
-
 				} elseif ($varAnnotation === 'bool') {
 					$value = (bool) $value;
-
 				} elseif ($varAnnotation === 'string') {
 					$value = (string) $value;
 				}
@@ -102,12 +108,10 @@ final class StateFactory
 							call_user_func_array($callback, [$value]);
 						}
 					}
-
-				} catch (ReflectionException $ex) {
+				} catch (ReflectionException) {
 					continue;
-
 				} catch (Throwable $ex) {
-					throw new Exceptions\InvalidStateException('State could not be created', 0, $ex);
+					throw new Exceptions\InvalidState('State could not be created', 0, $ex);
 				}
 			}
 		}
@@ -116,19 +120,17 @@ final class StateFactory
 	}
 
 	/**
-	 * This method was inspired with same method in Nette framework
+	 * This method was inspired by same method in Nette framework
 	 *
-	 * @param ReflectionMethod $method
-	 * @param PHPOnCouch\CouchDocument $document
-	 *
-	 * @return mixed[]
+	 * @return array<mixed>
 	 *
 	 * @throws ReflectionException
 	 */
 	private static function autowireArguments(
 		ReflectionMethod $method,
-		PHPOnCouch\CouchDocument $document
-	): array {
+		PHPOnCouch\CouchDocument $document,
+	): array
+	{
 		$res = [];
 
 		foreach ($method->getParameters() as $num => $parameter) {
@@ -165,11 +167,9 @@ final class StateFactory
 	}
 
 	/**
-	 * @param ReflectionParameter $param
-	 *
-	 * @return string|NULL
+	 * @phpstan-return string|NULL
 	 */
-	private static function getParameterType(ReflectionParameter $param): ?string
+	private static function getParameterType(ReflectionParameter $param): string|null
 	{
 		if ($param->hasType()) {
 			$rt = $param->getType();
@@ -177,7 +177,9 @@ final class StateFactory
 			if ($rt instanceof ReflectionType && method_exists($rt, 'getName')) {
 				$type = $rt->getName();
 
-				return strtolower($type) === 'self' && $param->getDeclaringClass() !== null ? $param->getDeclaringClass()
+				return strtolower(
+					$type,
+				) === 'self' && $param->getDeclaringClass() !== null ? $param->getDeclaringClass()
 					->getName() : $type;
 			}
 		}
@@ -186,9 +188,7 @@ final class StateFactory
 	}
 
 	/**
-	 * @param Reflector $rc
-	 *
-	 * @return ReflectionProperty[]
+	 * @return array<ReflectionProperty>
 	 */
 	private static function getProperties(Reflector $rc): array
 	{
@@ -210,12 +210,9 @@ final class StateFactory
 	}
 
 	/**
-	 * @param ReflectionProperty $rp
-	 * @param string $name
-	 *
-	 * @return string|NULL
+	 * @phpstan-return string|NULL
 	 */
-	private static function parseAnnotation(ReflectionProperty $rp, string $name): ?string
+	private static function parseAnnotation(ReflectionProperty $rp, string $name): string|null
 	{
 		if ($rp->getDocComment() === false) {
 			return null;
