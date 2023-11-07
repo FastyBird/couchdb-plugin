@@ -13,13 +13,14 @@
  * @date           02.03.20
  */
 
-namespace FastyBird\Plugin\CouchDb\Models;
+namespace FastyBird\Plugin\CouchDb\Models\States;
 
 use FastyBird\Library\Bootstrap\Helpers as BootstrapHelpers;
 use FastyBird\Library\Metadata\Types as MetadataTypes;
 use FastyBird\Plugin\CouchDb\Connections;
 use FastyBird\Plugin\CouchDb\Exceptions;
 use FastyBird\Plugin\CouchDb\States;
+use FastyBird\Plugin\CouchDb\States\State as T;
 use InvalidArgumentException;
 use Nette;
 use PHPOnCouch;

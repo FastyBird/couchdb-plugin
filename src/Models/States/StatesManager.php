@@ -13,7 +13,7 @@
  * @date           03.03.20
  */
 
-namespace FastyBird\Plugin\CouchDb\Models;
+namespace FastyBird\Plugin\CouchDb\Models\States;
 
 use Consistence;
 use DateTimeInterface;
@@ -24,6 +24,7 @@ use FastyBird\Plugin\CouchDb\Connections;
 use FastyBird\Plugin\CouchDb\Events;
 use FastyBird\Plugin\CouchDb\Exceptions;
 use FastyBird\Plugin\CouchDb\States;
+use FastyBird\Plugin\CouchDb\States\State as T;
 use Nette;
 use Nette\Utils;
 use PHPOnCouch;
